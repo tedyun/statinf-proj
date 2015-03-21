@@ -96,6 +96,8 @@ legend("topright", legend=c("Normal"),
        col = "blue", lty = 1, lwd = 2, cex = 0.7)
 ```
 
+Here we see that the blue Gaussian curve does not match the histogram of the data as expected.
+
 \newpage
 
 ## Appendix
