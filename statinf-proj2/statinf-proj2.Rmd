@@ -1,7 +1,7 @@
 ---
 title: "ToothGrowth Data Analysis"
 author: "Taedong Yun"
-output: html_document
+output: pdf_document
 ---
 
 ## Overview
@@ -38,16 +38,49 @@ From the boxplot in the previous section, we study the following the problems.
 1. Do two different types of supplement have different effects on the growth of a tooth?
 2. Does more dosage means more growth of a tooth?
 
-We will address these two questions with statistical inference techniques.
+We will address these two questions with simple T tests.
 
 ### Length vs Supplement Type
 
+Given a null hypothesis that two different types of supplement have the *same* effect on the length of a tooth, we perform a two-sided T test against the variables `len` and `supp`. We assume unequal variance.
 
+```{r}
+t.test(len ~ supp, data = ToothGrowth, paired = FALSE, var.equal = FALSE)
+```
+
+From the result of the test we can see that 95% confidence interval contains the value 0 (in other words the p-value is greater than 0.05). Hence, we **cannot** reject the null hypothesis.
 
 ### Length vs Dosage
 
+For our second quesion, we will compare the differences of tooth length for dosage 0.5 and 1mg, and for 1 and 2mg. First we compare the dosage of 0.5 and 1mg. Our alternative hypothesis here is that the tooth length for 0.5mg dosage is *less* than the tooth length for 1mg dosage.
 
+```{r}
+suppressWarnings(library(dplyr))
+TG1 <- filter(ToothGrowth, dose == 0.5 | dose == 1)
+t.test(len ~ dose, data = TG1, paired = FALSE, var.equal = FALSE, alternative = "less")
+```
+
+Since the p-value is much less than 0.01, we can **reject** the null hypothesis and conclude that the tooth length for 0.5mg dosage is indeed less than the tooth length for 1mg dosage with 99% confidence.
+
+Now let us compare 1mg and 2mg dosage with the same method.
+
+```{r}
+TG2 <- filter(ToothGrowth, dose == 1 | dose == 2)
+t.test(len ~ dose, data = TG2, paired = FALSE, var.equal = FALSE, alternative = "less")
+```
+
+Again, the p-value is less than 0.01 so we **reject** the null hypothesis and conclude that more dosage means more growth with 99% confidence.
 
 ## Conclusion
 
-*INCLUDE ASSUMPTIONS NEEDED*
+In this report, we have examined the ToothGrowth dataset in R, studied basic summaries of the data, and performed a statistical inference on the correlations between the `len` variable and the other two variables.
+
+Our first inference question was about the correlation between the tooth growth and the type of supplements, and even though the mean in "OJ" group was greater than the mean in "VC", we could **not** reject the null hypothesis that the mean of growth is equal for two different types of supplement with 95% confidence.
+
+On the other hand, in our second statistical test we have concluded that more dosage of Vitamin C implies more tooth growth with more than 99% confidence.
+
+Note that for the above T tests our assumption is that we took random samples from the population of Guinea pigs and the distribution of the tooth length is approximately iid normal, or at least roughly symmetric and mound shaped. We assumed unequal variances for all the tests we performed.
+
+\newpage
+
+## Appendix
