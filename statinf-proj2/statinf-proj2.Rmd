@@ -17,7 +17,7 @@ library(datasets)
 str(ToothGrowth)
 ```
 
-The dataset has three variables, `len`, `supp`, and `dose`. `len` is the response which is the length of a tooth, `supp` is a delivery type of Vitamin C, swhich is either "VC" (ascorbic acid) or "OJ" (orange juice), and `dose` is the amount of dosage in milligrams. Note that `dose` variable take a value in 0.5, 1, or 2 so we can make it a factor variable. This dataset contains 60 observations. More information about this dataset can be found at https://stat.ethz.ch/R-manual/R-devel/library/datasets/html/ToothGrowth.html. Here is a basic summary of each variables in the dataset.
+The dataset has three variables, `len`, `supp`, and `dose`. `len` is the response which is the length of a tooth, `supp` is a delivery type of Vitamin C, either "VC" (ascorbic acid) or "OJ" (orange juice), and `dose` is the amount of dosage in milligrams. Note that `dose` variable take a value in 0.5, 1, or 2 so we can make it a factor variable. This dataset contains 60 observations. More information about this dataset can be found at https://stat.ethz.ch/R-manual/R-devel/library/datasets/html/ToothGrowth.html. Here is a basic summary of each variable in the dataset.
 
 ```{r}
 ToothGrowth$dose <- as.factor(ToothGrowth$dose)
@@ -31,12 +31,12 @@ library(lattice)
 bwplot(len ~ supp | dose, data = ToothGrowth, ylab = "Length", xlab = "Types of Supplement & Dosage", main = "Data Summary")
 ```
 
-## Inference
+## Hypothesis Testing
 
 From the boxplot in the previous section, we study the following the problems.
 
 1. Do two different types of supplement have different effects on the growth of a tooth?
-2. Does more dosage means more growth of a tooth?
+2. Does more dosage mean more growth of a tooth?
 
 We will address these two questions with simple T tests.
 
@@ -54,17 +54,17 @@ From the result of the test we can see that 95% confidence interval contains the
 
 For our second quesion, we will compare the differences of tooth length for dosage 0.5 and 1mg, and for 1 and 2mg. First we compare the dosage of 0.5 and 1mg. Our alternative hypothesis here is that the tooth length for 0.5mg dosage is *less* than the tooth length for 1mg dosage.
 
-```{r}
-suppressWarnings(library(dplyr))
+```{r, echo = FALSE}
+suppressMessages(library(dplyr))
 TG1 <- filter(ToothGrowth, dose == 0.5 | dose == 1)
 t.test(len ~ dose, data = TG1, paired = FALSE, var.equal = FALSE, alternative = "less")
 ```
 
 Since the p-value is much less than 0.01, we can **reject** the null hypothesis and conclude that the tooth length for 0.5mg dosage is indeed less than the tooth length for 1mg dosage with 99% confidence.
 
-Now let us compare 1mg and 2mg dosage with the same method.
+Now let us compare 1mg and 2mg dosage by the same method.
 
-```{r}
+```{r, echo = FALSE}
 TG2 <- filter(ToothGrowth, dose == 1 | dose == 2)
 t.test(len ~ dose, data = TG2, paired = FALSE, var.equal = FALSE, alternative = "less")
 ```
@@ -79,8 +79,41 @@ Our first inference question was about the correlation between the tooth growth 
 
 On the other hand, in our second statistical test we have concluded that more dosage of Vitamin C implies more tooth growth with more than 99% confidence.
 
-Note that for the above T tests our assumption is that we took random samples from the population of Guinea pigs and the distribution of the tooth length is approximately iid normal, or at least roughly symmetric and mound shaped. We assumed unequal variances for all the tests we performed.
+Note that for the above T tests, we have assumed that we took random samples from the population of Guinea pigs and the distribution of the tooth length is approximately iid normal, or at least roughly symmetric and mound shaped. We also assumed unequal variances for all the tests we performed.
 
 \newpage
 
 ## Appendix
+
+Here we attach R code snippets that were used to perform this research.
+
+```{r, results='hide', fig.show='hide'}
+library(datasets)
+str(ToothGrowth)
+```
+
+```{r, results='hide', fig.show='hide'}
+ToothGrowth$dose <- as.factor(ToothGrowth$dose)
+summary(ToothGrowth)
+```
+
+```{r, results='hide', fig.show='hide'}
+library(lattice)
+bwplot(len ~ supp | dose, data = ToothGrowth, ylab = "Length",
+       xlab = "Types of Supplement & Dosage", main = "Data Summary")
+```
+
+```{r, results='hide', fig.show='hide'}
+t.test(len ~ supp, data = ToothGrowth, paired = FALSE, var.equal = FALSE)
+```
+
+```{r, results='hide', fig.show='hide'}
+suppressMessages(library(dplyr))
+TG1 <- filter(ToothGrowth, dose == 0.5 | dose == 1)
+t.test(len ~ dose, data = TG1, paired = FALSE, var.equal = FALSE, alternative = "less")
+```
+
+```{r, results='hide', fig.show='hide'}
+TG2 <- filter(ToothGrowth, dose == 1 | dose == 2)
+t.test(len ~ dose, data = TG2, paired = FALSE, var.equal = FALSE, alternative = "less")
+```
