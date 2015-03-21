@@ -4,18 +4,50 @@ author: "Taedong Yun"
 output: html_document
 ---
 
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+## Overview
 
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+In this article, we will analyze the ToothGrowth data in the R datasets package. We will perform basic exploratory data analyses by providing a summary of the data and elementary statistical inference.
+
+## Summary of Data
+
+The ToothGrowth dataset contains the result of an experiment on Guinea Pigs about the correlation between Vitamin C dosage and the growth of tooth. Let us take a first look of the dataset.
 
 ```{r}
-summary(cars)
+library(datasets)
+str(ToothGrowth)
 ```
 
-You can also embed plots, for example:
+The dataset has three variables, `len`, `supp`, and `dose`. `len` is the response which is the length of a tooth, `supp` is a delivery type of Vitamin C, swhich is either "VC" (ascorbic acid) or "OJ" (orange juice), and `dose` is the amount of dosage in milligrams. Note that `dose` variable take a value in 0.5, 1, or 2 so we can make it a factor variable. This dataset contains 60 observations. More information about this dataset can be found at https://stat.ethz.ch/R-manual/R-devel/library/datasets/html/ToothGrowth.html. Here is a basic summary of each variables in the dataset.
 
-```{r, echo=FALSE}
-plot(cars)
+```{r}
+ToothGrowth$dose <- as.factor(ToothGrowth$dose)
+summary(ToothGrowth)
 ```
 
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+Note that `supp` and `dose` factor variables are evenly distributed in their possible values. The following figure is a box plot of the dataset.
+
+```{r echo=FALSE, fig.height = 3}
+library(lattice)
+bwplot(len ~ supp | dose, data = ToothGrowth, ylab = "Length", xlab = "Types of Supplement & Dosage", main = "Data Summary")
+```
+
+## Inference
+
+From the boxplot in the previous section, we study the following the problems.
+
+1. Do two different types of supplement have different effects on the growth of a tooth?
+2. Does more dosage means more growth of a tooth?
+
+We will address these two questions with statistical inference techniques.
+
+### Length vs Supplement Type
+
+
+
+### Length vs Dosage
+
+
+
+## Conclusion
+
+*INCLUDE ASSUMPTIONS NEEDED*
